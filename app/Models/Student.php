@@ -32,6 +32,10 @@ class Student extends Model
         return $this->belongsTo(StudentGroup::class, 'student_group_id', 'id');
     }
 
+    public function getData(){
+        return self::query()->get();
+    }
+
 
    
 }

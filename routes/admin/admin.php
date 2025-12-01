@@ -36,6 +36,11 @@ Route::group(["namespace"=>"Service"],function(){
     Route::delete("/delete-service/{id}", "ServiceController@destroyService")->name("delete-service");
 });
 
+
+Route::group(["namespace"=>"Student"],function(){
+    Route::get("/student-report","StudentController@studentReport")->name("student-report");
+});
+
 Route::group(["namespace"=>"Review"],function(){
     Route::get("/manage-review","ReviewController@manageReview")->name("manage-review");
     Route::match(["get","post"],"/store-review","ReviewController@storeReview")->name("store-review");
@@ -57,5 +62,7 @@ Route::group(["namespace"=>"Setting"],function(){
     Route::get("/manage-logs","SettingController@manageLogs")->name("manage-logs");
     Route::get("/view-log/{fileName}","SettingController@viewLogContent")->name("view-log");
 });
+
+
 
 

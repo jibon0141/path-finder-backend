@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class StudentGroup extends Model
 {
@@ -21,5 +22,19 @@ class StudentGroup extends Model
     {
         return $this->hasMany(Student::class,'student_group_id','id');
     }
+
+    public function findByFilters($search=[],$type='first'){
+        $query=self::query();
+        if(!empty($search['id'])){
+            $query->where('id',$search['id']);
+        }
+
+        $query= $query->$type();
+        return $query;
+        
+    }
     
 }
+
+
+
