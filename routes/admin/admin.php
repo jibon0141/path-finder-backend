@@ -63,6 +63,17 @@ Route::group(["namespace"=>"Setting"],function(){
     Route::get("/view-log/{fileName}","SettingController@viewLogContent")->name("view-log");
 });
 
+Route::group(["namespace"=>"Report"],function(){
+    Route::get("/student-report",'StudentReportController@index')->name("student-report");
+    // Route::get("/get-student-report",'StudentReportController@getStudentReportData')->name("get-student-report");
+
+
+});
 
 
 
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::resource('accounts', \App\Http\Controllers\Backend\AccountController::class);
+    Route::post('accounts/{id}/status', [\App\Http\Controllers\Backend\AccountController::class, 'status'])->name('accounts.status');
+});

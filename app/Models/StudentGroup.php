@@ -23,6 +23,10 @@ class StudentGroup extends Model
         return $this->hasMany(Student::class,'student_group_id','id');
     }
 
+    public function subject(){
+        return $this->hasMany(Subject::class, "group_id","id");
+    }
+
     public function findByFilters($search=[],$type='first'){
         $query=self::query();
         if(!empty($search['id'])){
@@ -31,9 +35,9 @@ class StudentGroup extends Model
 
         $query= $query->$type();
         return $query;
-        
+
     }
-    
+
 }
 
 

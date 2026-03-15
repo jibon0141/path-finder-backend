@@ -200,10 +200,51 @@
         </ul>
     </li>
     <!-- Settings Section End -->
+
+
+    <li class="nav-item">
+        <a href="#" class="nav-link main-nav-link">
+            <i class="fa-solid fa-cogs"></i>
+            <span>Student Report</span>
+            <span class="sidebar-arrow">
+              <i class="fa-solid fa-angle-right"></i>
+            </span>
+        </a>
+
+        <ul class="sidebar_sub-menu">
+            <li class="nav-item">
+                <a href="{{url('/student-report')}}" class="nav-link sub-nav-link">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Environment Settings</span>
+                    <span class="sidebar-arrow">
+                </span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{url('/system-optimization')}}" class="nav-link sub-nav-link">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>System Optimization</span>
+                    <span class="sidebar-arrow">
+                </span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{url('/manage-logs')}}" class="nav-link sub-nav-link">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>System Logs</span>
+                    <span class="sidebar-arrow">
+                </span>
+                </a>
+            </li>
+
+        </ul>
+    </li>
+
 </ul>
 
 
 
 
 
-    

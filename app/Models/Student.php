@@ -4,21 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Contact;
 
 class Student extends Model
 {
     use HasFactory;
 
     protected $table = 'students';
-    
+
     protected $fillable = [
         'student_name',
         'age',
         'student_email',
         'student_group_id'
     ];
-
 
 
     public function contact()
@@ -32,10 +30,16 @@ class Student extends Model
         return $this->belongsTo(StudentGroup::class, 'student_group_id', 'id');
     }
 
-    public function getData(){
+public function studentDetails()
+{
+    return $this->belongsTo(Student::class, 'student_id', 'id');
+
+}
+
+    public function getData()
+    {
         return self::query()->get();
     }
 
 
-   
 }
