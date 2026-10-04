@@ -21,7 +21,7 @@
         <div class="card input__main-card">
             <div style="background-color: #2c3e50; padding:5px 0px; color:white;">
                 <h5 class="card-title text-center fs-3">
-                    <i class="fa fa-cogs me-2"></i>
+                    <i class="fa fa-graduation-cap me-2"></i>
                     Student Report
                 </h5>
             </div>
@@ -68,40 +68,45 @@
                 </div>
             </form>
         </div>
+
+        <div class="card mt-3">
+            <div class="card-body table-responsive p-3">
+                <div class="table_wrapper">
+                    <table id="student_table" class="table table-bordered table_default uv_table display responsive" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Student Name</th>
+                                <th>Group</th>
+                                <th>Subjects</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
-
-<table id="student_table" class="table table-bordered">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Student Name</th>
-            <th>Group</th>
-            <th>Subjects</th>
-        </tr>
-    </thead>
-</table>
-
-<!-- JQuery & DataTables Scripts -->
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> -->
 
 @endsection
 
 @section('script')
 <script>
     $(document).ready(function() {
-        $('#student_table').DataTable({
+        var table = $('#student_table').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url: '{{ route('student-report') }}',
+                type: 'GET',
                 data: function(d) {
                     d.student_group_id = $('select[name=student_group_id]').val();
                     d.student_name = $('input[name=student_name]').val();
                     d.from_date = $('input[name=from_date]').val();
                     d.to_date = $('input[name=to_date]').val();
+                },
+                error: function(xhr, error, code) {
+                    console.error("DataTables Ajax error:", xhr.responseText);
                 }
             },
             columns: [
@@ -115,7 +120,14 @@
         // Filter on form submit
         $('form').on('submit', function(e) {
             e.preventDefault();
-            $('#student_table').DataTable().ajax.reload();
+            table.ajax.reload();
+        });
+
+        // Filter on form reset
+        $('button[type="reset"]').on('click', function(e) {
+            e.preventDefault();
+            $('form')[0].reset();
+            table.ajax.reload();
         });
     });
 </script>

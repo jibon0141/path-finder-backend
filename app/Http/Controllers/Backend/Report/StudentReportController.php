@@ -12,60 +12,54 @@ use Yajra\DataTables\Facades\DataTables;
 class StudentReportController extends Controller
 {
 
-   public function index(Request $request)
-{
-    if ($request->ajax()) {
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $query = Student::with(['studentGroup.subject'])
+                    ->when(!empty($request->from_date) && !empty($request->to_date), function ($q) use ($request) {
+                        $startDate = Carbon::parse($request->from_date)->startOfDay();
+                        $endDate = Carbon::parse($request->to_date)->endOfDay();
+                        return $q->whereBetween('created_at', [$startDate, $endDate]);
+                    })
+                    ->when(!empty($request->student_group_id), function ($q) use ($request) {
+                        return $q->where('student_group_id', $request->student_group_id);
+                    })
+                    ->when(!empty($request->student_name), function ($q) use ($request) {
+                        return $q->where('student_name', 'like', "%{$request->student_name}%");
+                    });
 
+                return DataTables::of($query)
+                    ->addIndexColumn()
+                    ->addColumn('student_name', function ($row) {
+                        return $row->student_name ?? '-';
+                    })
+                    ->addColumn('student_group', function ($row) {
+                        return $row->studentGroup->group_name ?? '-';
+                    })
+                    ->addColumn('subjects', function ($row) {
+                        if (!empty($row->studentGroup) && !empty($row->studentGroup->subject) && $row->studentGroup->subject->isNotEmpty()) {
+                            return $row->studentGroup->subject->pluck('subject_name')->filter()->implode(', ');
+                        }
+                        return '-';
+                    })
+                    ->rawColumns(['subjects'])
+                    ->make(true);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Student Report DataTables Error: ' . $e->getMessage());
+                return response()->json([
+                    'draw' => intval($request->get('draw', 1)),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => [],
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
 
-      
-        $data = Student::with('studentGroup.subject')
-               ->when(!empty($request->from_date) && !empty($request->to_date),function($query) use($request){
-                  $startDate = Carbon::parse($request->from_date)->startOfDay();
-                  $endDate = Carbon::parse($request->to_date)->endOfDay();
-                $query->whereBetween('created_at',[$startDate, $endDate]);
-               })
-               ->when(!empty($request->student_group_id),function($query) use($request){
-               return $query->where('student_group_id',$request->student_group_id);
-               })
-               ->when(!empty($request->student_name),function($query) use($request){
-               return $query->where('student_name','like',"%{$request->student_name}%");
-               })
-               ->get();
-
-              
-             
-
-    //     $query=Student::with('studentGroup.subject');
-    //     if ($request->from_date && $request->to_date) {
-    //         $startDate = Carbon::parse($request->from_date)->startOfDay();
-    //         $endDate = Carbon::parse($request->to_date)->endOfDay();
-    //         $query->whereBetween('created_at', [$startDate, $endDate]);
-    //     }
-        
-    //     if ($request->student_group_id) {
-    //         $query->where('student_group_id', $request->student_group_id);
-    //     }
-        
-    //     if ($request->student_name) {
-    //         $query->where('student_name', 'like', "%{$request->student_name}%");
-    //     }
-    //    $data=$query->get();
-        
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('student_name', fn($row) => $row->student_name ?? '')
-            ->addColumn('student_group', fn($row) => $row->studentGroup?->group_name ?? '')
-            ->addColumn('subjects', fn($row) => 
-                $row->studentGroup && $row->studentGroup->subject 
-                    ? $row->studentGroup->subject->pluck('subject_name')->implode(', ')
-                    : ''
-            )
-            ->make(true);
+        $studentGroups = StudentGroup::all();
+        return view('admin.extends.report.student_report', compact('studentGroups'));
     }
-       $studentGroups = StudentGroup::all();
-       return view('admin.extends.report.student_report', compact('studentGroups'));
-   
-}
 
 
     public function searchStudent(Request $request){
