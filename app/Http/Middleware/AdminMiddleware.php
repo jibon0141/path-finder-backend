@@ -10,27 +10,29 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::guard("admins")->check()) {
-
+        if (Auth::guard("admins")->check()) {
             $adminId = Auth::guard('admins')->id(); 
-            
 
             $data = DB::table('admins')->where('id', $adminId)->first();
 
             if (!$data) {
-               Auth::guard('admins')->logout();
+                Auth::guard('admins')->logout();
                 return redirect('/login-page');
             }
 
             switch ($data->status) {
                 case 'approved':
+                case '1':
                     return $next($request);
                 case 'pending':
+                case '0':
+                    Auth::guard('admins')->logout();
+                    return redirect('/login-page')->withErrors(['email' => 'Your account is pending approval.']);
                 case 'banned':
-                   Auth::guard('admins')->logout();
-                    return redirect('/login-page');
+                    Auth::guard('admins')->logout();
+                    return redirect('/login-page')->withErrors(['email' => 'Your account is banned.']);
                 default:
-                   Auth::guard('admins')->logout();
+                    Auth::guard('admins')->logout();
                     return redirect('/login-page');
             }
         }
