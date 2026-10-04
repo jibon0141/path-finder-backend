@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('admins', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->string("mobile_number");
-    $table->string('picture');
-    $table->string('status');
-    $table->string('password');
-    $table->rememberToken();
-    $table->timestamps();
-       });
+        Schema::create('admins', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('mobile_number')->nullable();
+            $table->string('picture')->nullable();
+            $table->string('status')->default('approved');
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
     }
-    
+
     /**
      * Reverse the migrations.
      */

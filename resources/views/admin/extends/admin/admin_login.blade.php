@@ -27,13 +27,32 @@
                     <h2>UVIOM</h2>
                 </div>
                 <div class="form-input-wrapper">
+                    @if ($errors->any())
+                        <div class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 13px;">
+                            <ul style="margin: 0; padding-left: 18px;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 13px;">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    @if (session('success'))
+                        <div class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 13px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <div class="input-group mb-3">
                         <label class="input-label">Email</label>
-                        <input class="input" type="text" placeholder="Email" name="email">
+                        <input class="input" type="text" placeholder="Email" name="email" value="{{ old('email') }}" required>
                     </div>
                     <div class="input-group mb-2">
                         <label class="input-label">Password</label>
-                        <input class="input" type="password" placeholder="Password" name="password">
+                        <input class="input" type="password" placeholder="Password" name="password" required>
                     </div>
                     <div class="password-hide-show">
                         <a class="forgot-password mb-3" href="#">Forgot password ?</a>
@@ -44,7 +63,7 @@
                         <label class="input-label">Remember Me</label>
                     </div>
                    <div class="login-btn-wrapper mb-3">
-                    <button class="login-button"> Login </button>
+                    <button class="login-button" type="submit"> Login </button>
                    </div>
                 </div>
             </form>
