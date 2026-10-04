@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->string('subject_name')->nullable();
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->timestamps();
         });
     }

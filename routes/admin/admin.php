@@ -38,7 +38,7 @@ Route::group(["namespace"=>"Service"],function(){
 
 
 Route::group(["namespace"=>"Student"],function(){
-    Route::get("/student-report","StudentController@studentReport")->name("student-report");
+    //
 });
 
 Route::group(["namespace"=>"Review"],function(){
