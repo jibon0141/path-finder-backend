@@ -18,6 +18,7 @@ class Account extends Model
         'status',
         'is_default',
     ];
+    
 
     protected $casts = [
         'opening_balance' => 'decimal:2',
